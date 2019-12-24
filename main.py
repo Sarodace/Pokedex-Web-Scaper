@@ -30,6 +30,13 @@ var4 = ""
 var5 = ""
 var6 = ""
 var7 = ""
+type = ""
+typeList = []
+ability = ""
+abilityList = []
+dexNumber = ""
+
+
 
 secondFileIn = open("fout.txt","rt")
 formatedPokedex = open("formattedPokedex.csv","wb+")
@@ -56,12 +63,22 @@ for line in secondFileIn:
     # Get pokemon's speed
     var6 = line[line.find('"spe":') + 6 : line.find(',"weight"')]
     print(var6)
-    # Get pokemon's weight
+    # Get pokemon's weight (in kilograms)
     var7 = line[line.find('"weight":') + 9 : line.find(',"height"')]
     print(var7)
-    # Get pokemon's height
+    # Get pokemon's height (in meters)
+    var8 = line[line.find('"height":') + 9 : line.find(',"types"')]
+    print(var8)
     # Get pokemon's type
+    type = line[line.find('"types":') + 9 : line.find('abilities') - 3]
+    typeList = type.split(",")
+    print(typeList)
     # Get pokemon's abilities
+    ability = line[line.find('abilities') + 12 : line.find('formats') - 3]
+    abilityList = ability.split(",")
+    print(abilityList)
     # Get pokemon's dex number
+    dexNumber = line[line.find('dex_number') + 12 : line.find('cap') - 2]
+    print(dexNumber)
     # Get pokemon's other forms
     break
