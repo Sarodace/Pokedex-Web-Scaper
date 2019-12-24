@@ -35,8 +35,10 @@ typeList = []
 ability = ""
 abilityList = []
 dexNumber = ""
-
-
+evo = ""
+evoList = []
+alts = ""
+altsList = []
 
 secondFileIn = open("fout.txt","rt")
 formatedPokedex = open("formattedPokedex.csv","wb+")
@@ -80,5 +82,13 @@ for line in secondFileIn:
     # Get pokemon's dex number
     dexNumber = line[line.find('dex_number') + 12 : line.find('cap') - 2]
     print(dexNumber)
+    # Get pokemon's evolutions
+    evo = line[line.find('evos') + 8 : line.find('alts') - 4]
+    evoList = evo.split(",")
+    print(evoList)
     # Get pokemon's other forms
+    alts = line[line.find('alts') + 7 : line.find('genfamily') - 3]
+    altsList = alts.split(",")
+    print(altsList)
+
     break
