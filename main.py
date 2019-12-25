@@ -1,7 +1,5 @@
-# TODO: Actually use the CSV library maybe?
 # Import libraries
 import urllib.request
-# import csv
 
 # Function that'll I'll move to the function file
 def listToStringCSV(string):
@@ -9,16 +7,15 @@ def listToStringCSV(string):
   variable = evo.replace(",",", ")
   return variable
 
-
-# # # Scrape pokedex into a text file
-webPage = urllib.request.urlopen("https://www.smogon.com/dex/ss/pokemon/")
-unformatedPokedex = open("fin.txt", "wb")
+# Scrape pokedex into a text file
+webPage = urllib.request.urlopen("https://www.smogon.com/dex/bw/pokemon/")
+unformatedPokedex = open("docs/fin.txt", "wb")
 unformatedPokedex.write(webPage.read())
 unformatedPokedex.close()
 
 # Remove "most" unnecessary html
-fileIn = open("file.txt","rt")
-fileOut = open("fout.txt","wt")
+fileIn = open("docs/fin.txt","rt")
+fileOut = open("docs/fout.txt","wt")
 
 for line in fileIn:
   if line.startswith("            d"):
@@ -29,7 +26,7 @@ fileIn.close()
 fileOut.close()
 
 # Handle File I/O
-secondFileIn = open("fout.txt","rt")
+secondFileIn = open("docs/fout.txt","rt")
 formatedPokedex = open("formattedPokedex.csv","w+")
 
 # Define and add CSV header fields
@@ -38,14 +35,15 @@ fieldNames = ['Dex Number', 'Name', 'Type (1)', 'Type (2)','Abilities (1)',
               'Special Defense', 'Speed', 'Weight', 'Height', 'Other forms', 
               'Evolutions']
 
-# TODO: Turn this into a function
 for i in range(0,len(fieldNames)):
   if not i == len(fieldNames) - 1:
     formatedPokedex.write(fieldNames[i] + ',')
   else:
     formatedPokedex.write(fieldNames[i] + '\n')
 
+
 # Fill CSV
+delete = 0
 for line in secondFileIn:
   if line.startswith("{"):
     name = line[line.find('"name":') + 8 : line.find(",") - 1]
@@ -75,7 +73,9 @@ for line in secondFileIn:
 
     # Get pokemon's dex number
     dexNumber = line[line.find('dex_number') + 12 : line.find('cap') - 2]
-
+    if int(dexNumber) < 0:
+      delete = 1
+    
     # Get pokemon's evolutions
     evo = line[line.find('evos') + 7 : line.find('alts') - 3]
     listToStringCSV(evo)
@@ -89,7 +89,10 @@ for line in secondFileIn:
 
     # Actually fill in the CSV!
     for i in range(0,len(contents)):
-      if not i == len(contents) - 1:
+      if delete == 1:
+        break
+      elif not i == len(contents) - 1:
         formatedPokedex.write(contents[i] + ',')
       else:
         formatedPokedex.write(contents[i] + '\n')
+    delete = 0
